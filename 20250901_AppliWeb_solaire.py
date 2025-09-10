@@ -39,6 +39,7 @@ col1, col2 = st.columns(2)
 
 with col1:
     st.header("Paramètres de calculs")
+    st.subheader("Plus la valeur est élevée, plus le code est précis... et lent!")
     # New Slider for nb_h
     nb_h = st.slider("Nombre de points de calcul par jour", min_value=5, max_value=1000, value=300, step=50)
 
@@ -54,9 +55,9 @@ with col1:
         d_vec_input = np.arange(0, 365, 1)
     else:
         # Utiliser une date par défaut cohérente
-        default_date = datetime.date(2024, 4, 23)
+        default_date = datetime.date(2025, 10, 21)
         selected_date = st.date_input("Sélectionnez le jour à analyser", value=default_date)
-        d_vec_input = [selected_date.timetuple().tm_yday]
+        d_vec_input = [selected_date.timetuple().tm_yday + 11]
 
     my_lambda_deg = st.slider("Latitude (°)", -90, 90, -43)
     my_lambda = my_lambda_deg * DEG2RAD
@@ -673,3 +674,4 @@ else:
             st.write(f"Énergie totale des radiateurs sur l'année: {np.sum(np.sum(p_radiateur_total * dt, axis=0)) / 1e3:.2f} kWh")
             st.write(f"Énergie totale ECS sur l'année: {np.sum(np.sum(p_ecs_total * dt, axis=0)) / 1e3:.2f} kWh")
             st.write(f"Énergie totale consommée par la pompe du circulateur sur l'année: {np.sum(np.sum(p_circulateur_total * dt, axis=0)) / 1e3:.2f} kWh")
+
