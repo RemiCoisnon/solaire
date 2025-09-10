@@ -95,13 +95,13 @@ with col1:
 
     for i, panel in enumerate(st.session_state.panels):
         with st.container():
-            st.markdown(f"### 🪟 Panneau {i+1}")
-            st.markdown(
-                """
-                <div style="border: 1px solid #ccc; padding: 15px; border-radius: 10px; background-color: #f9f9f9;">
-                """,
-                unsafe_allow_html=True
-            )
+            st.markdown(f"Surface {i+1}")
+            st.markdown("""
+            <div style="border: 1px solid #ccc; padding: 10px; border-radius: 8px; background-color: #f9f9f9;">
+                <h4>Panneau 1</h4>
+                <p>Voici les paramètres de votre panneau solaire.</p>
+            </div>
+            """, unsafe_allow_html=True)
         
             # Ligne 1 : sliders étendus
             col1, col2 = st.columns([1, 1])
@@ -691,6 +691,7 @@ else:
             st.write(f"Énergie totale des radiateurs sur l'année: {np.sum(np.sum(p_radiateur_total * dt, axis=0)) / 1e3:.2f} kWh")
             st.write(f"Énergie totale ECS sur l'année: {np.sum(np.sum(p_ecs_total * dt, axis=0)) / 1e3:.2f} kWh")
             st.write(f"Énergie totale consommée par la pompe du circulateur sur l'année: {np.sum(np.sum(p_circulateur_total * dt, axis=0)) / 1e3:.2f} kWh")
+
 
 
 
