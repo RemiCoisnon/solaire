@@ -58,7 +58,7 @@ with col1:
         # Utiliser une date par défaut cohérente
         default_date = datetime.date(2025, 10, 21)
         selected_date = st.date_input("Sélectionnez le jour à analyser", value=default_date)
-        d_vec_input = [selected_date.timetuple().tm_yday + 20]
+        d_vec_input = [selected_date.timetuple().tm_yday + 10]
 
     my_lambda_deg = st.slider("Latitude (°)", -90, 90, -43)
     my_lambda = my_lambda_deg * DEG2RAD
@@ -704,6 +704,7 @@ else:
             st.write(f"Énergie totale des radiateurs sur l'année: {np.sum(np.sum(p_radiateur_total * dt, axis=0)) / 1e3:.2f} kWh")
             st.write(f"Énergie totale ECS sur l'année: {np.sum(np.sum(p_ecs_total * dt, axis=0)) / 1e3:.2f} kWh")
             st.write(f"Énergie totale consommée par la pompe du circulateur sur l'année: {np.sum(np.sum(p_circulateur_total * dt, axis=0)) / 1e3:.2f} kWh")
+
 
 
 
