@@ -13,6 +13,7 @@ import pandas as pd
 from numpy import linalg as LA
 from scipy import interpolate
 import plotly.express as px
+import plotly.graph_objects as go
 import datetime
 
 # =========================================================================== #
@@ -561,6 +562,20 @@ if not analyse_annee:
     fig_power = px.line(df_power, x="Heure [h]", y="Puissance [W]", color="Type", 
                         title="Puissance disponible")
     fig_power.update_yaxes(tickformat=", .2f")
+    # Récupérer les bornes de l'axe x
+    x_min = df_power["Heure [h]"].min()
+    x_max = df_power["Heure [h]"].max()
+    
+    # Ajouter la ligne horizontale
+    fig_power.add_trace(
+        go.Scatter(
+            x=[x_min, x_max],
+            y=[2200, 2200],
+            mode="lines",
+            name=f"Machine à laver: 2200 W",
+            line=dict(color="red", dash="dash")
+        )
+    )
     st.plotly_chart(fig_power, use_container_width=True)
     
     # Graphique 3: Températures (Plotly)
@@ -689,6 +704,7 @@ else:
             st.write(f"Énergie totale des radiateurs sur l'année: {np.sum(np.sum(p_radiateur_total * dt, axis=0)) / 1e3:.2f} kWh")
             st.write(f"Énergie totale ECS sur l'année: {np.sum(np.sum(p_ecs_total * dt, axis=0)) / 1e3:.2f} kWh")
             st.write(f"Énergie totale consommée par la pompe du circulateur sur l'année: {np.sum(np.sum(p_circulateur_total * dt, axis=0)) / 1e3:.2f} kWh")
+
 
 
 
