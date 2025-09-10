@@ -95,7 +95,6 @@ with col1:
 
     for i, panel in enumerate(st.session_state.panels):
         with st.container():
-            st.markdown(f"Surface {i+1}")
             st.markdown(f"""
             <div style="border: 1px solid #ccc; padding: 15px; border-radius: 10px; background-color: #f9f9f9;">
                 <h4>🪟 Surface {i+1}</h4>
@@ -690,6 +689,7 @@ else:
             st.write(f"Énergie totale des radiateurs sur l'année: {np.sum(np.sum(p_radiateur_total * dt, axis=0)) / 1e3:.2f} kWh")
             st.write(f"Énergie totale ECS sur l'année: {np.sum(np.sum(p_ecs_total * dt, axis=0)) / 1e3:.2f} kWh")
             st.write(f"Énergie totale consommée par la pompe du circulateur sur l'année: {np.sum(np.sum(p_circulateur_total * dt, axis=0)) / 1e3:.2f} kWh")
+
 
 
 
