@@ -94,26 +94,37 @@ with col1:
     surface_vec = []
 
     for i, panel in enumerate(st.session_state.panels):
-        st.markdown(f"**Panneau {i+1}**")
-        col_panel_1, col_panel_2, col_panel_3, col_panel_4, col_panel_5 = st.columns([1, 1, 1, 1, 0.1])
-        with col_panel_1:
-            st.markdown("**Orientation**  \n_↔ Est (-90°) — Sud (0°) — Ouest (+90°)_")
-            panel["beta"] = st.slider(" ", min_value=-90, max_value=90, value=int(panel["beta"]), step=1, key=f"beta_{i}")
-        with col_panel_2:
-            st.markdown("**Inclinaison**  \n_0° = Horizontal — 90° = Vertical_")
-            panel["theta"] = st.slider(" ", min_value=0, max_value=90, value=int(panel["theta"]), step=1, key=f"theta_{i}")
-        #with col_panel_1:
-        #    panel["beta"] = st.slider(f"Orientation (Est -90° à Ouest +90°)", min_value=-90, max_value=90, value=int(panel["beta"]), step=1, key=f"beta_{i}")
-        #with col_panel_2:
-        #    panel["theta"] = st.slider(f"Inclinaison (Horizontal 0° à Vertical 90°)", min_value=0, max_value=90, value=int(panel["theta"]), step=1, key=f"theta_{i}")
-        with col_panel_3:
-            panel["eta"] = st.number_input(f"Rendement (%)", value=panel["eta"], key=f"eta_{i}")
-        with col_panel_4:
-            panel["surface"] = st.number_input(f"Surface (m²)", value=panel["surface"], key=f"surface_{i}")
-        with col_panel_5:
-            st.write("")
-            st.button("X", on_click=remove_panel, args=(i,), key=f"remove_{i}")
-        st.markdown("---")
+        with st.container():
+            st.markdown(f"### 🪟 Panneau {i+1}")
+            st.markdown(
+                """
+                <div style="border: 1px solid #ccc; padding: 15px; border-radius: 10px; background-color: #f9f9f9;">
+                """,
+                unsafe_allow_html=True
+            )
+        
+            # Ligne 1 : sliders étendus
+            col1, col2 = st.columns([1, 1])
+            with col1:
+                st.markdown("**Orientation**  \n_↔ Est (-90°) — Sud (0°) — Ouest (+90°)_")
+                panel["beta"] = st.slider(" ", min_value=-90, max_value=90, value=int(panel["beta"]), step=1, key=f"beta_{i}")
+        
+            with col2:
+                st.markdown("**Inclinaison**  \n_0° = Horizontal — 90° = Vertical_")
+                panel["theta"] = st.slider(" ", min_value=0, max_value=90, value=int(panel["theta"]), step=1, key=f"theta_{i}")
+        
+            # Ligne 2 : rendement + surface
+            col3, col4 = st.columns([1, 1])
+            with col3:
+                panel["eta"] = st.number_input("Rendement (%)", value=panel["eta"], key=f"eta_{i}")
+            with col4:
+                panel["surface"] = st.number_input("Surface (m²)", value=panel["surface"], key=f"surface_{i}")
+        
+            # Bouton pour supprimer
+            st.button("❌ Supprimer ce panneau", on_click=remove_panel, args=(i,), key=f"remove_{i}")
+        
+            st.markdown("</div>", unsafe_allow_html=True)
+            st.markdown("---")
         
         betap_vec.append(panel["beta"])
         thetap_vec.append(panel["theta"])
@@ -680,5 +691,6 @@ else:
             st.write(f"Énergie totale des radiateurs sur l'année: {np.sum(np.sum(p_radiateur_total * dt, axis=0)) / 1e3:.2f} kWh")
             st.write(f"Énergie totale ECS sur l'année: {np.sum(np.sum(p_ecs_total * dt, axis=0)) / 1e3:.2f} kWh")
             st.write(f"Énergie totale consommée par la pompe du circulateur sur l'année: {np.sum(np.sum(p_circulateur_total * dt, axis=0)) / 1e3:.2f} kWh")
+
 
 
