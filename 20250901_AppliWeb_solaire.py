@@ -35,9 +35,7 @@ Cette application permet de simuler la production d'énergie d'une installation 
 Vous pouvez ajuster les paramètres ci-dessous pour voir comment ils affectent les résultats.
 """)
 
-st.markdown(f"""
-<iframe src="https://github.com/RemiCoisnon/solaire/raw/main/documentation.pdf" width="700" height="800" type="application/pdf"></iframe>
-""", unsafe_allow_html=True)
+st.markdown("[📄 Documentation du code (PDF)](https://github.com/RemiCoisnon/solaire/raw/main/documentation.pdf)", unsafe_allow_html=True)
 
 # Colonnes pour organiser l'interface
 col1, col2 = st.columns(2)
@@ -708,6 +706,7 @@ else:
             st.write(f"Énergie totale des radiateurs sur l'année: {np.sum(np.sum(p_radiateur_total * dt, axis=0)) / 1e3:.2f} kWh")
             st.write(f"Énergie totale ECS sur l'année: {np.sum(np.sum(p_ecs_total * dt, axis=0)) / 1e3:.2f} kWh")
             st.write(f"Énergie totale consommée par la pompe du circulateur sur l'année: {np.sum(np.sum(p_circulateur_total * dt, axis=0)) / 1e3:.2f} kWh")
+
 
 
 
