@@ -97,9 +97,15 @@ with col1:
         st.markdown(f"**Panneau {i+1}**")
         col_panel_1, col_panel_2, col_panel_3, col_panel_4, col_panel_5 = st.columns([1, 1, 1, 1, 0.1])
         with col_panel_1:
-            panel["beta"] = st.slider(f"Orientation (Est -90° à Ouest +90°)", min_value=-90, max_value=90, value=int(panel["beta"]), step=1, key=f"beta_{i}")
+            st.markdown("**Orientation**  \n_↔ Est (-90°) — Sud (0°) — Ouest (+90°)_")
+            panel["beta"] = st.slider(" ", min_value=-90, max_value=90, value=int(panel["beta"]), step=1, key=f"beta_{i}")
         with col_panel_2:
-            panel["theta"] = st.slider(f"Inclinaison (Horizontal 0° à Vertical 90°)", min_value=0, max_value=90, value=int(panel["theta"]), step=1, key=f"theta_{i}")
+            st.markdown("**Inclinaison**  \n_0° = Horizontal — 90° = Vertical_")
+            panel["theta"] = st.slider(" ", min_value=0, max_value=90, value=int(panel["theta"]), step=1, key=f"theta_{i}")
+        #with col_panel_1:
+        #    panel["beta"] = st.slider(f"Orientation (Est -90° à Ouest +90°)", min_value=-90, max_value=90, value=int(panel["beta"]), step=1, key=f"beta_{i}")
+        #with col_panel_2:
+        #    panel["theta"] = st.slider(f"Inclinaison (Horizontal 0° à Vertical 90°)", min_value=0, max_value=90, value=int(panel["theta"]), step=1, key=f"theta_{i}")
         with col_panel_3:
             panel["eta"] = st.number_input(f"Rendement (%)", value=panel["eta"], key=f"eta_{i}")
         with col_panel_4:
@@ -674,4 +680,5 @@ else:
             st.write(f"Énergie totale des radiateurs sur l'année: {np.sum(np.sum(p_radiateur_total * dt, axis=0)) / 1e3:.2f} kWh")
             st.write(f"Énergie totale ECS sur l'année: {np.sum(np.sum(p_ecs_total * dt, axis=0)) / 1e3:.2f} kWh")
             st.write(f"Énergie totale consommée par la pompe du circulateur sur l'année: {np.sum(np.sum(p_circulateur_total * dt, axis=0)) / 1e3:.2f} kWh")
+
 
