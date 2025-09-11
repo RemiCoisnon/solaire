@@ -120,14 +120,6 @@ with col1:
             st.markdown("</div>", unsafe_allow_html=True)
             st.markdown("---")
 
-        if analyse_annee:
-            d_vec_input = np.arange(0, 365, 1)
-        else:
-            # Utiliser une date par défaut cohérente
-            default_date = datetime.date(2025, 10, 21)
-            selected_date = st.date_input("Sélectionnez le jour à analyser", value=default_date)
-            d_vec_input = [selected_date.timetuple().tm_yday + 10]
-
         betap_vec.append(panel["beta"])
         thetap_vec.append(panel["theta"])
         eta_vec.append(panel["eta"])
@@ -169,6 +161,13 @@ with col2:
         Cp, MTAMPON, MCUMULUS, LAMBDA, SBALLON, EBALLON, TCAVE, TINT = 0, 0, 0, 0, 0, 0, 0, 0
         TEXTCHAUFFE, P0, DELTAT0, GAMMA, P_POMPE_CIRCU, LTUYAUX, ETUYAUX, STUYAUX = 0, 0, 0, 0, 0, 0, 0, 0
         MECS, TIMEECS, is_thermique = 0, [0, 0], False
+if analyse_annee:
+    d_vec_input = np.arange(0, 365, 1)
+else:
+    # Utiliser une date par défaut cohérente
+    default_date = datetime.date(2025, 10, 21)
+    selected_date = st.date_input("Sélectionnez le jour à analyser", value=default_date)
+    d_vec_input = [selected_date.timetuple().tm_yday + 10]
 
 # =========================================================================== #
 #           PARAMÈTRES INITIAUX ET CONSTANTES                                 #
@@ -707,6 +706,7 @@ else:
             st.write(f"Énergie totale des radiateurs sur l'année: {np.sum(np.sum(p_radiateur_total * dt, axis=0)) / 1e3:.2f} kWh")
             st.write(f"Énergie totale ECS sur l'année: {np.sum(np.sum(p_ecs_total * dt, axis=0)) / 1e3:.2f} kWh")
             st.write(f"Énergie totale consommée par la pompe du circulateur sur l'année: {np.sum(np.sum(p_circulateur_total * dt, axis=0)) / 1e3:.2f} kWh")
+
 
 
 
