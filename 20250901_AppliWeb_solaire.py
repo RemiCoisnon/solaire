@@ -2,7 +2,7 @@
 """
 Créé le Mer 17 janv. 18:17:53 2024
 
-@auteur: Gemini
+@auteur: Remi COISNON
 """
 # =========================================================================== #
 #       IMPORTATION DES LIBRAIRIES PYTHON POUR FAIRE TOURNER LE PROGRAMME     #
@@ -69,7 +69,7 @@ with col1:
     if 'panels' not in st.session_state:
         st.session_state.panels = []
     
-    # Gérer la liste des panneaux en fonction du type de système
+    # Gérer la liste des surfaces en fonction du type de système
     if 'last_system_type' not in st.session_state or st.session_state.last_system_type != system_type:
         st.session_state.panels = []
         if system_type == "Photovoltaïque":
@@ -122,7 +122,7 @@ with col1:
                 panel["surface"] = st.number_input("Surface (m²)", value=panel["surface"], key=f"surface_{i}")
         
             # Bouton pour supprimer
-            st.button("❌ Supprimer ce panneau", on_click=remove_panel, args=(i,), key=f"remove_{i}")
+            st.button("❌ Supprimer cette surface", on_click=remove_panel, args=(i,), key=f"remove_{i}")
         
             st.markdown("</div>", unsafe_allow_html=True)
             st.markdown("---")
@@ -394,7 +394,7 @@ def run_simulation(betap_vec, thetap_vec, eta_vec, surface_vec, d_vec, my_lambda
                 # Accumuler la puissance de tous les panneaux
                 p_disponible_total[i_hour, i_day] += P_dispo
 
-        # Calculer les énergies pour chaque panneau après la boucle horaire
+        # Calculer les énergies pour chaque surface après la boucle horaire
         for i_panneau in range(len(betap_vec)):
             energy_panneau_vec[i_day, i_panneau] = np.sum(p_disponible_per_panel[:, i_day, i_panneau]) * dt / 1E3
         
@@ -505,18 +505,18 @@ if not analyse_annee:
         df_temp = pd.DataFrame({
             "Heure [h]": np.linspace(0, 24, nb_h), # Use nb_h here
             "Angle [deg]": anglevec_p[:, 0, i],
-            "Panneau": f"Panneau {i+1}"
+            "surface": f"surface {i+1}"
         })
         df_angle = pd.concat([df_angle, df_temp], ignore_index=True)
     
     df_power = pd.DataFrame()
     list_df_power = []
-    # Créer une ligne pour chaque panneau
+    # Créer une ligne pour chaque surface
     for i in range(len(st.session_state.panels)):
         list_df_power.append(pd.DataFrame({
             "Heure [h]": np.linspace(0, 24, nb_h), # Use nb_h here
             "Puissance [W]": p_disponible_per_panel[:, 0, i],
-            "Type": f"Panneau {i+1} (Puissance)"
+            "Type": f"surface {i+1} (Puissance)"
         }))
     # Ajouter la ligne pour la puissance totale
     list_df_power.append(pd.DataFrame({
@@ -554,8 +554,8 @@ if not analyse_annee:
         "Tuyaux": p_tuyaux_total[:, 0] / 1E3
     }).melt("Heure [h]", var_name="Composant", value_name="Puissance [kW]")
 
-    # Graphique 1: Angle panneau (Plotly)
-    fig_angle = px.line(df_angle, x="Heure [h]", y="Angle [deg]", color="Panneau",
+    # Graphique 1: Angle surface (Plotly)
+    fig_angle = px.line(df_angle, x="Heure [h]", y="Angle [deg]", color="surface",
                         title="Angle des panneaux par rapport au soleil")
     fig_angle.update_yaxes(range=[0, 90])
     st.plotly_chart(fig_angle, use_container_width=True)
@@ -612,7 +612,7 @@ else:
         df_temp = pd.DataFrame({
             "Jour de l'année": d_vec_display,
             "Énergie totale [kWh]": np.sum(p_disponible_per_panel[:, :, i_panneau] * dt, axis=0) / 1E3,
-            "Panneau": f"Panneau {i_panneau+1}"
+            "surface": f"surface {i_panneau+1}"
         })
         list_df.append(df_temp)
     df_energy = pd.concat(list_df, ignore_index=True)
@@ -671,13 +671,13 @@ else:
         df_temp = pd.DataFrame({
             "Jour de l'année": d_vec_display,
             "Efficacité [%]": efficacite,
-            "Panneau": f"Panneau {i_panneau+1}"
+            "surface": f"surface {i_surface+1}"
         })
         list_df_efficiency.append(df_temp)
     df_efficiency = pd.concat(list_df_efficiency, ignore_index=True)
 
     # Graphique 1: Énergies (Plotly)
-    fig_energy = px.line(df_energy, x="Jour de l'année", y="Énergie totale [kWh]", color="Panneau",
+    fig_energy = px.line(df_energy, x="Jour de l'année", y="Énergie totale [kWh]", color="surface",
                          title="Énergie cumulée par jour")
     st.plotly_chart(fig_energy, use_container_width=True)
 
@@ -693,19 +693,20 @@ else:
         st.plotly_chart(fig_thermal, use_container_width=True)
 
     # Graphique 4: Efficacité (Plotly)
-    fig_efficiency = px.line(df_efficiency, x="Jour de l'année", y="Efficacité [%]", color="Panneau",
+    fig_efficiency = px.line(df_efficiency, x="Jour de l'année", y="Efficacité [%]", color="surface",
                              title="Efficacité de l'installation")
     st.plotly_chart(fig_efficiency, use_container_width=True)
 
     st.markdown("---")
     st.subheader("Synthèse annuelle")
     for i_panneau in range(len(betap_vec)):
-        st.write(f"**Panneau {i_panneau+1}**")
+        st.write(f"**surface {i_panneau+1}**")
         st.write(f"Énergie totale récupérée sur l'année: {np.sum(np.sum(p_disponible_per_panel[:, :, i_panneau] * dt, axis=0)) / 1e3:.2f} kWh")
         if is_thermique:
             st.write(f"Énergie totale des radiateurs sur l'année: {np.sum(np.sum(p_radiateur_total * dt, axis=0)) / 1e3:.2f} kWh")
             st.write(f"Énergie totale ECS sur l'année: {np.sum(np.sum(p_ecs_total * dt, axis=0)) / 1e3:.2f} kWh")
             st.write(f"Énergie totale consommée par la pompe du circulateur sur l'année: {np.sum(np.sum(p_circulateur_total * dt, axis=0)) / 1e3:.2f} kWh")
+
 
 
 
