@@ -254,7 +254,7 @@ def fun_temperature_exterieur():
     days_vec = [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
     temperature_vec = [5.8, 6.3, 10, 13.5, 17.6, 22.5, 25, 24.5, 20, 15.8, 10.1, 6.6, 5.8]
     days1 = np.cumsum(days_vec)
-    f_temperature_ext = interpolate.interp1d(days1, temperature_vec)
+    f_temperature_ext = interpolate.interp1d(days1, temperature_vec, bounds_error=False, fill_value="extrapolate")
     return f_temperature_ext
 
 def day_month(my_day):
@@ -706,6 +706,7 @@ else:
             st.write(f"Énergie totale des radiateurs sur l'année: {np.sum(np.sum(p_radiateur_total * dt, axis=0)) / 1e3:.2f} kWh")
             st.write(f"Énergie totale ECS sur l'année: {np.sum(np.sum(p_ecs_total * dt, axis=0)) / 1e3:.2f} kWh")
             st.write(f"Énergie totale consommée par la pompe du circulateur sur l'année: {np.sum(np.sum(p_circulateur_total * dt, axis=0)) / 1e3:.2f} kWh")
+
 
 
 
