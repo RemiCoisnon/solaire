@@ -325,11 +325,11 @@ def run_simulation(betap_vec, thetap_vec, eta_vec, surface_vec, d_vec, my_lambda
         # Initialisation de la puissance totale pour chaque pas de temps
         p_disponible_total[:, i_day] = 0
 
-        for i_panneau in range(len(betap_vec)):
-            betap = betap_vec[i_panneau] * DEG2RAD
-            thetap = thetap_vec[i_panneau] * DEG2RAD
-            eta = eta_vec[i_panneau]
-            surface = surface_vec[i_panneau]
+        for i_surface in range(len(betap_vec)):
+            betap = betap_vec[i_surface] * DEG2RAD
+            thetap = thetap_vec[i_surface] * DEG2RAD
+            eta = eta_vec[i_surface]
+            surface = surface_vec[i_surface]
             
             for i_hour, hour in enumerate(hvec):
                 h = hour * HOUR2RAD + d_angle
@@ -357,7 +357,7 @@ def run_simulation(betap_vec, thetap_vec, eta_vec, surface_vec, d_vec, my_lambda
                         my_angle_panneau = 0.
                 else:
                     my_angle_panneau = 0.
-                anglevec_p[i_hour, i_day, i_panneau] = my_angle_panneau / DEG2RAD
+                anglevec_p[i_hour, i_day, i_surface] = my_angle_panneau / DEG2RAD
                 
                 if jour:
                     STprojl = np.array([0, ST3[1], ST3[2]])
@@ -389,14 +389,14 @@ def run_simulation(betap_vec, thetap_vec, eta_vec, surface_vec, d_vec, my_lambda
                 P_panneau = power_aval * abs(np.cos(ang_tmp))
                 
                 P_dispo = P_panneau * (eta / 100) * surface
-                p_disponible_per_panel[i_hour, i_day, i_panneau] = P_dispo
+                p_disponible_per_panel[i_hour, i_day, i_surface] = P_dispo
 
                 # Accumuler la puissance de tous les panneaux
                 p_disponible_total[i_hour, i_day] += P_dispo
 
         # Calculer les énergies pour chaque surface après la boucle horaire
-        for i_panneau in range(len(betap_vec)):
-            energy_panneau_vec[i_day, i_panneau] = np.sum(p_disponible_per_panel[:, i_day, i_panneau]) * dt / 1E3
+        for i_surface in range(len(betap_vec)):
+            energy_panneau_vec[i_day, i_surface] = np.sum(p_disponible_per_panel[:, i_day, i_surface]) * dt / 1E3
         
         # Calculer les puissances du système thermique
         if is_thermique:
@@ -608,11 +608,11 @@ else:
 
     df_energy = pd.DataFrame()
     list_df = []
-    for i_panneau in range(len(betap_vec)):
+    for i_surface in range(len(betap_vec)):
         df_temp = pd.DataFrame({
             "Jour de l'année": d_vec_display,
-            "Énergie totale [kWh]": np.sum(p_disponible_per_panel[:, :, i_panneau] * dt, axis=0) / 1E3,
-            "surface": f"surface {i_panneau+1}"
+            "Énergie totale [kWh]": np.sum(p_disponible_per_panel[:, :, i_surface] * dt, axis=0) / 1E3,
+            "surface": f"surface {i_surface+1}"
         })
         list_df.append(df_temp)
     df_energy = pd.concat(list_df, ignore_index=True)
@@ -654,14 +654,14 @@ else:
 
     df_efficiency = pd.DataFrame()
     list_df_efficiency = []
-    for i_panneau in range(len(betap_vec)):
-        total_energy_per_panel = np.sum(p_disponible_per_panel[:, :, i_panneau] * dt, axis=0) / 1e3
+    for i_surface in range(len(betap_vec)):
+        total_energy_per_panel = np.sum(p_disponible_per_panel[:, :, i_surface] * dt, axis=0) / 1e3
         
         # Gérer la division par zéro
         if np.sum(p_aval_vec) == 0:
             ref_energy = 1
         else:
-            ref_energy = np.sum(p_aval_vec * dt, axis=0) * surface_vec[i_panneau] / 1E3
+            ref_energy = np.sum(p_aval_vec * dt, axis=0) * surface_vec[i_surface] / 1E3
         
         if ref_energy[0] != 0:
             efficacite = (total_energy_per_panel / ref_energy) * 100
@@ -699,13 +699,14 @@ else:
 
     st.markdown("---")
     st.subheader("Synthèse annuelle")
-    for i_panneau in range(len(betap_vec)):
-        st.write(f"**surface {i_panneau+1}**")
-        st.write(f"Énergie totale récupérée sur l'année: {np.sum(np.sum(p_disponible_per_panel[:, :, i_panneau] * dt, axis=0)) / 1e3:.2f} kWh")
+    for i_surface in range(len(betap_vec)):
+        st.write(f"**surface {i_surface+1}**")
+        st.write(f"Énergie totale récupérée sur l'année: {np.sum(np.sum(p_disponible_per_panel[:, :, i_surface] * dt, axis=0)) / 1e3:.2f} kWh")
         if is_thermique:
             st.write(f"Énergie totale des radiateurs sur l'année: {np.sum(np.sum(p_radiateur_total * dt, axis=0)) / 1e3:.2f} kWh")
             st.write(f"Énergie totale ECS sur l'année: {np.sum(np.sum(p_ecs_total * dt, axis=0)) / 1e3:.2f} kWh")
             st.write(f"Énergie totale consommée par la pompe du circulateur sur l'année: {np.sum(np.sum(p_circulateur_total * dt, axis=0)) / 1e3:.2f} kWh")
+
 
 
 
