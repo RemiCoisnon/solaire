@@ -611,7 +611,7 @@ else:
     for i_surface in range(len(betap_vec)):
         df_temp = pd.DataFrame({
             "Jour de l'année": d_vec_display,
-            "Énergie totale [kWh]": np.sum(p_disponible_per_panel[:, :, i_surface] * dt, axis=0) / 1E3,
+            "Énergie récupérée [kWh]": np.sum(p_disponible_per_panel[:, :, i_surface] * dt, axis=0) / 1E3,
             "surface": f"surface {i_surface+1}"
         })
         list_df.append(df_temp)
@@ -677,7 +677,7 @@ else:
     df_efficiency = pd.concat(list_df_efficiency, ignore_index=True)
 
     # Graphique 1: Énergies (Plotly)
-    fig_energy = px.line(df_energy, x="Jour de l'année", y="Énergie [kWh]", color="surface",
+    fig_energy = px.line(df_energy, x="Jour de l'année", y="Énergie récupérée [kWh]", color="surface",
                          title="Énergie récupérée par jour")
     st.plotly_chart(fig_energy, use_container_width=True)
 
@@ -706,6 +706,7 @@ else:
             st.write(f"Énergie totale des radiateurs sur l'année: {np.sum(np.sum(p_radiateur_total * dt, axis=0)) / 1e3:.2f} kWh")
             st.write(f"Énergie totale ECS sur l'année: {np.sum(np.sum(p_ecs_total * dt, axis=0)) / 1e3:.2f} kWh")
             st.write(f"Énergie totale consommée par la pompe du circulateur sur l'année: {np.sum(np.sum(p_circulateur_total * dt, axis=0)) / 1e3:.2f} kWh")
+
 
 
 
