@@ -505,7 +505,7 @@ def run_simulation(betap_vec, thetap_vec, eta_vec, surface_vec, d_vec, my_lambda
 
     return (anglevec_p, p_aval_vec, p_disponible_per_panel, p_disponible_total, t_ballon_tampon_total, t_cumulus_total, p_utile_total, p_tampon_total, 
             p_cumulus_total, p_radiateur_total, p_ecs_total, p_tuyaux_total, p_circulateur_total, energy_panneau_vec, energy_radiateur_vec, 
-            energy_ecs_vec, energy_circulateur_vec, d_vec, betap_vec, is_thermique)
+            energy_ecs_vec, energy_circulateur_vec, d_vec, betap_vec, is_thermique, duree_jour)
 
 # Exécuter la simulation
 if 'Cp' not in locals(): # Initialisation des variables thermiques pour le cas PV
@@ -515,7 +515,7 @@ if 'Cp' not in locals(): # Initialisation des variables thermiques pour le cas P
 
 (anglevec_p, p_aval_vec, p_disponible_per_panel, p_disponible_total, t_ballon_tampon_total, t_cumulus_total, p_utile_total, p_tampon_total, 
  p_cumulus_total, p_radiateur_total, p_ecs_total, p_tuyaux_total, p_circulateur_total, energy_panneau_vec, energy_radiateur_vec, 
- energy_ecs_vec, energy_circulateur_vec, d_vec, betap_vec, is_thermique) = run_simulation(
+ energy_ecs_vec, energy_circulateur_vec, d_vec, betap_vec, is_thermique, duree_jour) = run_simulation(
     betap_vec, thetap_vec, eta_vec, surface_vec, d_vec_input, my_lambda,
     Cp, MTAMPON, MCUMULUS, LAMBDA, SBALLON, EBALLON, TCAVE, TINT, 
     TEXTCHAUFFE, P0, DELTAT0, GAMMA, P_POMPE_CIRCU, LTUYAUX, ETUYAUX, STUYAUX, 
@@ -732,6 +732,7 @@ else:
             st.write(f"Énergie totale des radiateurs sur l'année: {np.sum(np.sum(p_radiateur_total * dt, axis=0)) / 1e3:.2f} kWh")
             st.write(f"Énergie totale ECS sur l'année: {np.sum(np.sum(p_ecs_total * dt, axis=0)) / 1e3:.2f} kWh")
             st.write(f"Énergie totale consommée par la pompe du circulateur sur l'année: {np.sum(np.sum(p_circulateur_total * dt, axis=0)) / 1e3:.2f} kWh")
+
 
 
 
