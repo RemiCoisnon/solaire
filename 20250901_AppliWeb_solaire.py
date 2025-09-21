@@ -642,17 +642,10 @@ else:
         list_df.append(df_temp)
     df_energy = pd.concat(list_df, ignore_index=True)
     
-    my_duree_jour = np.zeros(365)
-    for i_day in range(365):
-        try:
-            non_zero_indices = np.nonzero(anglevec_p[:, i_day, 0])[0]
-            if len(non_zero_indices) > 0:
-                my_duree_jour[i_day] = (non_zero_indices.max() - non_zero_indices.min()) * (24 / nb_h)
-        except IndexError:
-            pass
+    
     df_daylight = pd.DataFrame({
         "Jour de l'année": d_vec_display,
-        "Durée [h]": my_duree_jour
+        "Durée [h]": duree_jour
     })
 
 
@@ -731,6 +724,7 @@ else:
             st.write(f"Énergie totale des radiateurs sur l'année: {np.sum(np.sum(p_radiateur_total * dt, axis=0)) / 1e3:.2f} kWh")
             st.write(f"Énergie totale ECS sur l'année: {np.sum(np.sum(p_ecs_total * dt, axis=0)) / 1e3:.2f} kWh")
             st.write(f"Énergie totale consommée par la pompe du circulateur sur l'année: {np.sum(np.sum(p_circulateur_total * dt, axis=0)) / 1e3:.2f} kWh")
+
 
 
 
