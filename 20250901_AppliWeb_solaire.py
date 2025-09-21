@@ -353,7 +353,7 @@ def run_simulation(betap_vec, thetap_vec, eta_vec, surface_vec, d_vec, my_lambda
                     my_angle_local = 0.
                 #
                 anglevec_soleil[i_hour,i_day]=my_angle_local/DEG2RAD
-                
+                #
                 tmp1 = ST3[0]
                 jour = tmp1 < 0
                 
@@ -407,7 +407,18 @@ def run_simulation(betap_vec, thetap_vec, eta_vec, surface_vec, d_vec, my_lambda
 
                 # Accumuler la puissance de tous les panneaux
                 p_disponible_total[i_hour, i_day] += P_dispo
-
+        # Calcul de la duree du jour:
+        my_non_zero = np.nonzero(anglevec_soleil[:,i_day])
+        tmp = my_non_zero[0]
+        len_non_zero = len(tmp)
+        if len_non_zero>0:
+            i_leve   = np.min(my_non_zero)
+            i_couche = np.max(my_non_zero)
+            my_duree_jour = hvec[i_couche]-hvec[i_leve]
+        else:
+            my_duree_jour = 0
+        duree_jour[i_day] = my_duree_jour
+        
         # Calculer les énergies pour chaque surface après la boucle horaire
         for i_surface in range(len(betap_vec)):
             energy_panneau_vec[i_day, i_surface] = np.sum(p_disponible_per_panel[:, i_day, i_surface]) * dt / 1E3
@@ -720,6 +731,7 @@ else:
             st.write(f"Énergie totale des radiateurs sur l'année: {np.sum(np.sum(p_radiateur_total * dt, axis=0)) / 1e3:.2f} kWh")
             st.write(f"Énergie totale ECS sur l'année: {np.sum(np.sum(p_ecs_total * dt, axis=0)) / 1e3:.2f} kWh")
             st.write(f"Énergie totale consommée par la pompe du circulateur sur l'année: {np.sum(np.sum(p_circulateur_total * dt, axis=0)) / 1e3:.2f} kWh")
+
 
 
 
