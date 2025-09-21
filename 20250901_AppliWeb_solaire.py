@@ -339,6 +339,13 @@ def run_simulation(betap_vec, thetap_vec, eta_vec, surface_vec, d_vec, my_lambda
                 L25 = rotation_2_5(my_lambda, betap, thetap)
                 ST5 = (L25.dot(Lst2)).dot(STst)
                 ST3 = Lst3.dot(STst)
+                #
+                # Calcul dde la hauteur du soleil: angle entre le vecteur ST et le plan du panneau solaire (y5,z5)
+                tmp1 = ST3[0]
+                if tmp1>=0:
+                    jour = False
+                else:
+                    jour = True
                 unorm = LA.norm(ST5)
 
                 # Projection du rayon du soleil dans le plan local
@@ -724,6 +731,7 @@ else:
             st.write(f"Énergie totale des radiateurs sur l'année: {np.sum(np.sum(p_radiateur_total * dt, axis=0)) / 1e3:.2f} kWh")
             st.write(f"Énergie totale ECS sur l'année: {np.sum(np.sum(p_ecs_total * dt, axis=0)) / 1e3:.2f} kWh")
             st.write(f"Énergie totale consommée par la pompe du circulateur sur l'année: {np.sum(np.sum(p_circulateur_total * dt, axis=0)) / 1e3:.2f} kWh")
+
 
 
 
