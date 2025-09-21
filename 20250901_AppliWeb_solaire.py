@@ -314,7 +314,8 @@ def run_simulation(betap_vec, thetap_vec, eta_vec, surface_vec, d_vec, my_lambda
     energy_radiateur_vec = np.zeros((len(d_vec), len(betap_vec)))
     energy_ecs_vec = np.zeros((len(d_vec), len(betap_vec)))
     energy_circulateur_vec = np.zeros((len(d_vec), len(betap_vec)))
-    
+
+    duree_jour = np.zeros((nb_days,))
     fun_t_ext = fun_temperature_exterieur()
 
     for i_day, my_day in enumerate(d_vec):
@@ -731,6 +732,7 @@ else:
             st.write(f"Énergie totale des radiateurs sur l'année: {np.sum(np.sum(p_radiateur_total * dt, axis=0)) / 1e3:.2f} kWh")
             st.write(f"Énergie totale ECS sur l'année: {np.sum(np.sum(p_ecs_total * dt, axis=0)) / 1e3:.2f} kWh")
             st.write(f"Énergie totale consommée par la pompe du circulateur sur l'année: {np.sum(np.sum(p_circulateur_total * dt, axis=0)) / 1e3:.2f} kWh")
+
 
 
 
