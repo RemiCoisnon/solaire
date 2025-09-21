@@ -293,6 +293,7 @@ def run_simulation(betap_vec, thetap_vec, eta_vec, surface_vec, d_vec, my_lambda
     
     # Initialisation des vecteurs de résultats
     anglevec_p = np.zeros((nb_h, len(d_vec), len(betap_vec)))
+    anglevec_soleil = np.zeros((nb_h,len(d_vec)))
     p_disponible_per_panel = np.zeros((nb_h, len(d_vec), len(betap_vec)))
     p_aval_vec = np.zeros((nb_h, len(d_vec)))
 
@@ -706,6 +707,7 @@ else:
             st.write(f"Énergie totale des radiateurs sur l'année: {np.sum(np.sum(p_radiateur_total * dt, axis=0)) / 1e3:.2f} kWh")
             st.write(f"Énergie totale ECS sur l'année: {np.sum(np.sum(p_ecs_total * dt, axis=0)) / 1e3:.2f} kWh")
             st.write(f"Énergie totale consommée par la pompe du circulateur sur l'année: {np.sum(np.sum(p_circulateur_total * dt, axis=0)) / 1e3:.2f} kWh")
+
 
 
 
