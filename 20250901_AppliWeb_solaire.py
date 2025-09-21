@@ -340,6 +340,19 @@ def run_simulation(betap_vec, thetap_vec, eta_vec, surface_vec, d_vec, my_lambda
                 ST5 = (L25.dot(Lst2)).dot(STst)
                 ST3 = Lst3.dot(STst)
                 unorm = LA.norm(ST5)
+
+                # Projection du rayon du soleil dans le plan local
+                STprojl = np.array([0,ST3[1],ST3[2]])
+                uv = STprojl.dot(ST3)
+                vnorm = LA.norm(STprojl)
+                den = unorm*vnorm
+                # Calcul de l'angle entre le rayon solaire et le plan du panneau solaire
+                if jour:
+                    my_angle_local = np.arccos(uv/den)
+                else:
+                    my_angle_local = 0.
+                #
+                anglevec_soleil[i_hour,i_day]=my_angle_local/DEG2RAD
                 
                 tmp1 = ST3[0]
                 jour = tmp1 < 0
@@ -707,6 +720,7 @@ else:
             st.write(f"Énergie totale des radiateurs sur l'année: {np.sum(np.sum(p_radiateur_total * dt, axis=0)) / 1e3:.2f} kWh")
             st.write(f"Énergie totale ECS sur l'année: {np.sum(np.sum(p_ecs_total * dt, axis=0)) / 1e3:.2f} kWh")
             st.write(f"Énergie totale consommée par la pompe du circulateur sur l'année: {np.sum(np.sum(p_circulateur_total * dt, axis=0)) / 1e3:.2f} kWh")
+
 
 
 
