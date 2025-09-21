@@ -283,7 +283,7 @@ def run_simulation(betap_vec, thetap_vec, eta_vec, surface_vec, d_vec, my_lambda
                    Cp, MTAMPON, MCUMULUS, LAMBDA, SBALLON, EBALLON, TCAVE, TINT, 
                    TEXTCHAUFFE, P0, DELTAT0, GAMMA, P_POMPE_CIRCU, LTUYAUX, ETUYAUX, STUYAUX, 
                    MECS, TIMEECS, analyse_annee, is_thermique, nb_h):
-    
+    nb_days = len(d_vec)
     # Recalculate hvec and dt here, inside the cached function, to ensure it's
     # part of the cache key and updates when nb_h changes.
     hvec = np.linspace(0, 24, nb_h)
@@ -292,29 +292,29 @@ def run_simulation(betap_vec, thetap_vec, eta_vec, surface_vec, d_vec, my_lambda
     STst = [1, 0, 0]  # Vecteur Soleil vers Terre dans le repère soleil tournant
     
     # Initialisation des vecteurs de résultats
-    anglevec_p = np.zeros((nb_h, len(d_vec), len(betap_vec)))
-    anglevec_soleil = np.zeros((nb_h,len(d_vec)))
-    p_disponible_per_panel = np.zeros((nb_h, len(d_vec), len(betap_vec)))
-    p_aval_vec = np.zeros((nb_h, len(d_vec)))
+    anglevec_p = np.zeros((nb_h, nb_days, len(betap_vec)))
+    anglevec_soleil = np.zeros((nb_h,nb_days))
+    p_disponible_per_panel = np.zeros((nb_h, nb_days, len(betap_vec)))
+    p_aval_vec = np.zeros((nb_h, nb_days))
 
     # Variables cumulatives pour l'ensemble du système
-    p_disponible_total = np.zeros((nb_h, len(d_vec)))
-    p_radiateur_total = np.zeros((nb_h, len(d_vec)))
-    p_cumulus_total = np.zeros((nb_h, len(d_vec)))
-    p_tampon_total = np.zeros((nb_h, len(d_vec)))
-    p_utile_total = np.zeros((nb_h, len(d_vec)))
-    p_circulateur_total = np.zeros((nb_h, len(d_vec)))
-    p_ecs_total = np.zeros((nb_h, len(d_vec)))
-    p_tuyaux_total = np.zeros((nb_h, len(d_vec)))
-    t_ballon_tampon_total = np.zeros((nb_h, len(d_vec)))
-    t_cumulus_total = np.zeros((nb_h, len(d_vec)))
-    p_tampon_fuite_total = np.zeros((nb_h, len(d_vec)))
+    p_disponible_total = np.zeros((nb_h, nb_days))
+    p_radiateur_total = np.zeros((nb_h, nb_days))
+    p_cumulus_total = np.zeros((nb_h, nb_days))
+    p_tampon_total = np.zeros((nb_h, nb_days))
+    p_utile_total = np.zeros((nb_h, nb_days))
+    p_circulateur_total = np.zeros((nb_h, nb_days))
+    p_ecs_total = np.zeros((nb_h, nb_days))
+    p_tuyaux_total = np.zeros((nb_h, nb_days))
+    t_ballon_tampon_total = np.zeros((nb_h, nb_days))
+    t_cumulus_total = np.zeros((nb_h, nb_days))
+    p_tampon_fuite_total = np.zeros((nb_h, nb_days))
     
-    energy_panneau_vec = np.zeros((len(d_vec), len(betap_vec)))
-    energy_radiateur_vec = np.zeros((len(d_vec), len(betap_vec)))
-    energy_ecs_vec = np.zeros((len(d_vec), len(betap_vec)))
-    energy_circulateur_vec = np.zeros((len(d_vec), len(betap_vec)))
-
+    energy_panneau_vec = np.zeros((nb_days, len(betap_vec)))
+    energy_radiateur_vec = np.zeros((nb_days, len(betap_vec)))
+    energy_ecs_vec = np.zeros((nb_days, len(betap_vec)))
+    energy_circulateur_vec = np.zeros((nb_days, len(betap_vec)))
+    
     duree_jour = np.zeros((nb_days,))
     fun_t_ext = fun_temperature_exterieur()
 
@@ -732,6 +732,7 @@ else:
             st.write(f"Énergie totale des radiateurs sur l'année: {np.sum(np.sum(p_radiateur_total * dt, axis=0)) / 1e3:.2f} kWh")
             st.write(f"Énergie totale ECS sur l'année: {np.sum(np.sum(p_ecs_total * dt, axis=0)) / 1e3:.2f} kWh")
             st.write(f"Énergie totale consommée par la pompe du circulateur sur l'année: {np.sum(np.sum(p_circulateur_total * dt, axis=0)) / 1e3:.2f} kWh")
+
 
 
 
